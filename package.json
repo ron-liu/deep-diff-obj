@@ -1,0 +1,29 @@
+{
+  "name": "deep-diff",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "prepublish": "tsc",
+    "publish": "echo \"publishing\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ron-liu/deep-diff.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ron-liu/deep-diff/issues"
+  },
+  "homepage": "https://github.com/ron-liu/deep-diff#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.23",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
+    "typescript": "^3.7.2"
+  }
+}
