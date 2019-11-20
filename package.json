@@ -1,5 +1,5 @@
 {
-  "name": "deep-diff",
+  "name": "deep-diff-obj",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
