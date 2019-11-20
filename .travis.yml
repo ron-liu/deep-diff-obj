@@ -1,4 +1,4 @@
-language: javascript
+language: node.js
 before_script:
   - npm install
 

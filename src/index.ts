@@ -1,1 +1,1 @@
-export const diff = () => {};
+export const diff = (l: any, r: any) => {};
