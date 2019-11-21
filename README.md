@@ -1,8 +1,10 @@
 # Diff javascript
 
 ## Plans
-
 - [ ] setup project
   - [ ] setup semantic-release
   - [ ] setup npm package
-  - [ ] setup travis ci
+  - [x] setup travis ci
+
+## Logs
+- 20/11 2h
