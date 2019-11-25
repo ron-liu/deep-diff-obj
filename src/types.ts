@@ -1,13 +1,15 @@
 export type Value = any
 export type GetKey = (t: any) => string
 
+export type ArrayOptions = {
+  orderSensitive: boolean
+  getKey?: GetKey
+  ignoreUndefinedKey?: boolean
+}
 export type Option = {
   path: string | RegExp
   ignore?: boolean
-  array?: {
-    orderSensitive: boolean
-    getKey?: GetKey
-  }
+  array?: ArrayOptions
 }
 
 export type DiffResult =

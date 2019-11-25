@@ -68,56 +68,60 @@ it('when diffing array without order specific, it should work', () => {
   ).toEqual([{ path: '(3)', type: 'A', right: 3 }])
 })
 
-// type Value = { id: number }
-// it('when diffing array without order specific, it should ingnore keys undfined', () => {
-//   expect(
-//     diff(
-//       [{ id: 1 }, { id: 2 }, { noid: 3 }] as Value[],
-//       [{ id: 1 }, { id: 2 }] as Value[],
-//       [
-//         {
-//           path: '',
-//           array: {
-//             getKey: (x: Value): string => x.id.toString(),
-//             orderSensitive: false
-//           }
-//         }
-//       ]
-//     )
-//   ).toHaveLength(0)
-//   expect(
-//     diff(
-//       [{ id: 1 }, { id: 2 }],
-//       [{ id: 1 }, { id: 2 }, { noid: 3 }],
-//       [['', { byOrder: false, getKey: x => x.id }]]
-//     )
-//   ).toHaveLength(0)
-// })
+it('when diffing array without order specific, it should ingnore keys undfined', () => {
+  expect(
+    diff(
+      [{ id: 1 }, { id: 2 }, { noid: 3 }],
+      [{ id: 1 }, { id: 2 }],
+      [
+        {
+          path: '',
+          array: {
+            getKey: x => (x.id ? x.id.toString() : undefined),
+            orderSensitive: false
+          }
+        }
+      ]
+    )
+  ).toHaveLength(0)
+  expect(
+    diff(
+      [{ id: 1 }, { id: 2 }],
+      [{ id: 1 }, { id: 2 }, { noid: 3 }],
+      [{ path: '', array: { orderSensitive: false, getKey: x => x.id } }]
+    )
+  ).toHaveLength(0)
+})
 
-// it('when diffing array without order specific, it should ingnore keys undfined if it is configured', () => {
-//   expect(
-//     diff(
-//       [{ id: 1 }, { id: 2 }, { noid: 3 }] as Value[],
-//       [{ id: 1 }, { id: 2 }] as Value[],
-//       [
-//         {
-//           path: '',
-//           array: {
-//             orderSensitive: false,
-//             getKey: (x: Value) => x.id.toString()
-//           }
-//         }
-//       ]
-//     )
-//   ).toEqual([['(undefined)', { noid: 3 }, undefined]])
-//   expect(
-//     diff(
-//       [{ id: 1 }, { id: 2 }],
-//       [{ id: 1 }, { id: 2 }, { noid: 3 }],
-//       [['', { byOrder: false, getKey: x => x.id, ignoreKeyUndefined: false }]]
-//     )
-//   ).toEqual([['(undefined)', undefined, { noid: 3 }]])
-// })
+it('when diffing array without order specific, it should ingnore keys undfined if it is configured', () => {
+  expect(
+    diff(
+      [{ id: 1 }, { id: 2 }, { noid: 3 }],
+      [{ id: 1 }, { id: 2 }],
+      [
+        {
+          path: '',
+          array: {
+            orderSensitive: false,
+            getKey: x => (x.id ? x.id.toString() : undefined)
+          }
+        }
+      ]
+    )
+  ).toEqual([{ path: '(undefined)', type: 'D', left: { noid: 3 } }])
+  expect(
+    diff(
+      [{ id: 1 }, { id: 2 }],
+      [{ id: 1 }, { id: 2 }, { noid: 3 }],
+      [
+        {
+          path: '',
+          array: { orderSensitive: false, ignoreUndefinedKey: false }
+        }
+      ]
+    )
+  ).toEqual([{ path: '(undefined)', type: 'A', right: { noid: 3 } }])
+})
 
 // it('when passing in ignore, it should ignre diff certain path', () => {
 //   expect(

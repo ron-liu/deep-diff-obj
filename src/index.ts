@@ -4,7 +4,8 @@ import {
   GetKey,
   Value,
   DiffResult,
-  DiffResultTypeEnum
+  DiffResultTypeEnum,
+  ArrayOptions
 } from './types'
 export const diff: Diff = (left, right, options = [], currentPath = '') => {
   options = options.map(x => ({ ...defaultOption, ...x }))
@@ -49,28 +50,31 @@ export const diff: Diff = (left, right, options = [], currentPath = '') => {
   }
   if (isArray(left)) {
     right = right || []
-    const {
-      array: { getKey = (x: any) => x, orderSensitive } = defaultArrayOption
-    } = {
+    const { array: arrayOptions = defaultArrayOption } = {
       ...defaultOption,
       ...(option || {})
     }
 
-    return orderSensitive
-      ? diffArrayWithOrder(left, right)
-      : diffArrayWithoutOrder(left, right, getKey)
+    return arrayOptions.orderSensitive
+      ? diffArrayWithSensitiveOrder(left, right)
+      : diffArrayWithInsensitiveOrder(left, right, arrayOptions)
   }
   return []
 
-  function diffArrayWithoutOrder(x1: any[], x2: any[], getKeyFn: GetKey) {
-    const aKeys = x1.map(getKeyFn).filter(x => !isUndefined(x))
+  function diffArrayWithInsensitiveOrder(
+    x1: any[],
+    x2: any[],
+    { getKey = defaultGetKey, ignoreUndefinedKey = false }: ArrayOptions
+  ) {
+    const filter = ignoreUndefinedKey ? (x: any) => !isUndefined(x) : () => true
+    const aKeys = x1.map(getKey).filter(filter)
     const keysOnlyBHas = x2
-      .map(getKeyFn)
+      .map(getKey)
       .filter(key => !aKeys.includes(key))
-      .filter(x => !isUndefined(x))
+      .filter(filter)
 
     const findByKey = (array: any[], key: string): DiffResult[] =>
-      array.find(item => getKeyFn(item) === key)
+      array.find(item => getKey(item) === key)
     const mismatches = aKeys.reduce<DiffResult[]>(
       (prev, key) => [
         ...prev,
@@ -98,7 +102,7 @@ export const diff: Diff = (left, right, options = [], currentPath = '') => {
     return [...mismatches, ...missings]
   }
 
-  function diffArrayWithOrder(x1: any[], x2: any[]) {
+  function diffArrayWithSensitiveOrder(x1: any[], x2: any[]) {
     const maxLength = Math.max(x1.length, x2.length)
     return range(maxLength).reduce<DiffResult[]>(
       (prev, index) => [
@@ -114,24 +118,36 @@ export const diff: Diff = (left, right, options = [], currentPath = '') => {
     )
   }
 }
-const defaultArrayOption = { getKey: (x: any) => x, orderSensitive: true }
+const defaultGetKey: GetKey = (x: any) => x
+const defaultArrayOption: ArrayOptions = {
+  getKey: defaultGetKey,
+  orderSensitive: true
+}
 const defaultOption: Option = {
   path: '',
   ignore: false
 }
 
 const isUndefined = (x: any) => typeof x === 'undefined'
+
 const isPrimitiveType = (x: any) =>
   ['string', 'number', 'boolean'].includes(typeof x)
+
 const isArray = (x: any) => Array.isArray(x)
+
 const isObject = (x: any) => typeof x === 'object' && !isArray(x)
+
 const createPath = (currentLoc: string, name: string): string =>
   !currentLoc ? name : `${currentLoc}.${name}`
+
 const createPathToOrderedArray = (currentLoc: string, index: number): string =>
   `${currentLoc}[${index}]`
+
 const createPathToNonOrderedArray = (currentLoc: string, key: string): string =>
   `${currentLoc}(${key})`
+
 const range = (max: number) => Array.from(Array(max).keys())
+
 const getOption = (options: Option[] = [], loc: string): Option => {
   const filterMatched = ({ path }: Option) => {
     if (typeof path === 'string') {
