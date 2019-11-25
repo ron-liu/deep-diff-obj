@@ -68,7 +68,7 @@ it('when diffing array without order specific, it should work', () => {
   ).toEqual([{ path: '(3)', type: 'A', right: 3 }])
 })
 
-it('when diffing array without order specific, it should ingnore keys undfined', () => {
+it('when diffing array without order censitive, it should ingnore keys undfined', () => {
   expect(
     diff(
       [{ id: 1 }, { id: 2 }, { noid: 3 }],
@@ -103,7 +103,8 @@ it('when diffing array without order specific, it should ingnore keys undfined i
           path: '',
           array: {
             orderSensitive: false,
-            getKey: x => (x.id ? x.id.toString() : undefined)
+            getKey: x => (x.id ? x.id.toString() : undefined),
+            ignoreUndefinedKey: false
           }
         }
       ]
@@ -116,73 +117,55 @@ it('when diffing array without order specific, it should ingnore keys undfined i
       [
         {
           path: '',
-          array: { orderSensitive: false, ignoreUndefinedKey: false }
+          array: {
+            orderSensitive: false,
+            ignoreUndefinedKey: false,
+            getKey: x => (x.id ? x.id.toString() : undefined)
+          }
         }
       ]
     )
   ).toEqual([{ path: '(undefined)', type: 'A', right: { noid: 3 } }])
 })
 
-// it('when passing in ignore, it should ignre diff certain path', () => {
-//   expect(
-//     diff({ a: 1, b: 2 }, { a: 1, b: 3 }, [['b', { ignore: true }]])
-//   ).toHaveLength(0)
-// })
+it('should ignore diff certain path when set ignore to certain path', () => {
+  expect(
+    diff({ a: 1, b: 2 }, { a: 1, b: 3 }, [{ path: 'b', ignore: true }])
+  ).toHaveLength(0)
+})
 
-// it('when diffing array without order specific, it should ingnore keys undfined', () => {
-//   expect(
-//     diff(
-//       [{ id: 1 }, { id: 2 }, { noid: 3 }],
-//       [{ id: 1 }, { id: 2 }],
-//       [['', { byOrder: false, getKey: x => x.id }]]
-//     )
-//   ).toHaveLength(0)
-//   expect(
-//     diff(
-//       [{ id: 1 }, { id: 2 }],
-//       [{ id: 1 }, { id: 2 }, { noid: 3 }],
-//       [['', { byOrder: false, getKey: x => x.id }]]
-//     )
-//   ).toHaveLength(0)
-// })
-
-// it('when diffing array without order specific, it should ingnore keys undfined if it is configured', () => {
-//   expect(
-//     diff(
-//       [{ id: 1 }, { id: 2 }, { noid: 3 }],
-//       [{ id: 1 }, { id: 2 }],
-//       [['', { byOrder: false, getKey: x => x.id, ignoreKeyUndefined: false }]]
-//     )
-//   ).toEqual([['(undefined)', { noid: 3 }, undefined]])
-//   expect(
-//     diff(
-//       [{ id: 1 }, { id: 2 }],
-//       [{ id: 1 }, { id: 2 }, { noid: 3 }],
-//       [['', { byOrder: false, getKey: x => x.id, ignoreKeyUndefined: false }]]
-//     )
-//   ).toEqual([['(undefined)', undefined, { noid: 3 }]])
-// })
-
-// it('when compare complex ones, it should work', () => {
-//   const a = {
-//     type: 'a',
-//     items: [
-//       { price: 80, name: 'sto' },
-//       { price: 550, billing: { type: 'payable' }, name: 'pro' }
-//     ]
-//   }
-//   const b = {
-//     type: 'b',
-//     items: [
-//       { price: 90, name: 'sto' },
-//       { price: 550, name: 'pro', billing: { type: 'credit' } }
-//     ]
-//   }
-//   expect(
-//     diff(a, b, [['items', { byOrder: false, getKey: item => item.name }]])
-//   ).toEqual([
-//     ['type', 'a', 'b'],
-//     ['items(sto).price', 80, 90],
-//     ['items(pro).billing.type', 'payable', 'credit']
-//   ])
-// })
+it('when compare complex ones, it should work', () => {
+  const a = {
+    type: 'a',
+    items: [
+      { price: 80, name: 'sto', fullPrice: 100 },
+      { price: 550, billing: { type: 'payable' }, name: 'pro' }
+    ]
+  }
+  const b = {
+    type: 'b',
+    items: [
+      { price: 90, name: 'sto' },
+      { price: 550, name: 'pro', billing: { type: 'credit' }, level: 'D' }
+    ]
+  }
+  expect(
+    diff(a, b, [
+      {
+        path: 'items',
+        array: { orderSensitive: false, getKey: item => item.name }
+      }
+    ])
+  ).toEqual([
+    { path: 'type', type: 'E', left: 'a', right: 'b' },
+    { path: 'items(sto).price', type: 'E', left: 80, right: 90 },
+    { path: 'items(sto).fullPrice', type: 'D', left: 100 },
+    {
+      path: 'items(pro).billing.type',
+      type: 'E',
+      left: 'payable',
+      right: 'credit'
+    },
+    { path: 'items(pro).level', type: 'A', right: 'D' }
+  ])
+})

@@ -64,7 +64,7 @@ export const diff: Diff = (left, right, options = [], currentPath = '') => {
   function diffArrayWithInsensitiveOrder(
     x1: any[],
     x2: any[],
-    { getKey = defaultGetKey, ignoreUndefinedKey = false }: ArrayOptions
+    { getKey = defaultGetKey, ignoreUndefinedKey = true }: ArrayOptions
   ) {
     const filter = ignoreUndefinedKey ? (x: any) => !isUndefined(x) : () => true
     const aKeys = x1.map(getKey).filter(filter)
