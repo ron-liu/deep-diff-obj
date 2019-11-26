@@ -59,7 +59,7 @@ it('when diffing array with object, by default it should order specific', () => 
   expect(diff([{ a: 1 }, { c: 1 }], [{ a: 1 }, { c: 1 }])).toHaveLength(0)
 })
 
-it('when diffing array without order specific, it should work', () => {
+it('when diffing array with order insensitive , it should work', () => {
   expect(
     diff([1, 2], [2, 1], [{ path: '', array: { orderSensitive: false } }])
   ).toHaveLength(0)
@@ -128,9 +128,17 @@ it('when diffing array without order specific, it should ingnore keys undfined i
   ).toEqual([{ path: '(undefined)', type: 'A', right: { noid: 3 } }])
 })
 
-it('should ignore diff certain path when set ignore to certain path', () => {
+it('should ignore diff certain path', () => {
   expect(
     diff({ a: 1, b: 2 }, { a: 1, b: 3 }, [{ path: 'b', ignore: true }])
+  ).toHaveLength(0)
+})
+
+it('should ignore diff certain path by regex', () => {
+  expect(
+    diff({ a: 1, b1: 2, b2: 3 }, { a: 1, b1: 3, b2: 4 }, [
+      { path: /^b/, ignore: true }
+    ])
   ).toHaveLength(0)
 })
 
