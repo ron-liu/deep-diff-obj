@@ -3,5 +3,5 @@ src
 .gitignore
 .prettierrc
 .travis.yml
-.jest.config.js
+jest.config.js
 tsconfig.json
