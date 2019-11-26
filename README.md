@@ -1,16 +1,16 @@
-# Diff javascript [![Build Status](https://travis-ci.org/ron-liu/deep-diff-obj.svg?branch=master)](https://travis-ci.org/ron-liu/deep-diff-obj) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
+# Diff javascript objects [![Build Status](https://travis-ci.org/ron-liu/deep-diff-obj.svg?branch=master)](https://travis-ci.org/ron-liu/deep-diff-obj) [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 
-## Why I another library to diff object
+## Why another library to diff object
 
-I knew there are already many libraries dealing with comparing two objects, like the below.
+I knew there are already many libraries dealing with comparing two objects.
 
 However, none of them support compare arrays with order insensitive, like `[1, 2]` and `[2, 1]` should be equal if we want to compare them with order insensitive.
 
 Also this package support the following features other libraries didn't support like:
 
-- certain path level configuration
+- path level configuration
 - path level configuration with regex supported
-- support arrays with order insensitive
+- compare arrays or arrays in certain paths with order insensitive
 - wrote in typescript
 
 ## How to use it
