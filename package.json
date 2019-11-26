@@ -8,13 +8,21 @@
     "test": "jest",
     "test-dev": "jest --watchAll",
     "semantic-release": "semantic-release",
+    "build": "tsc",
     "commit": "npx git-cz"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/ron-liu/deep-diff-obj.git"
   },
-  "keywords": [],
+  "keywords": [
+    "deep",
+    "diff",
+    "javascript",
+    "object",
+    "obj",
+    "compare"
+  ],
   "author": "",
   "license": "ISC",
   "bugs": {
