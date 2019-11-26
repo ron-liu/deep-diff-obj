@@ -4,10 +4,6 @@
 
 I knew there are already many libraries dealing with comparing two objects, like the below.
 
-- [js-deep-diff](https://www.npmjs.com/package/js-deep-diff)
-- [deep-diff](https://npmjs.com/deep-diff)
-- [deep-object-diff](https://npmjs.com/deep-object-diff)
-
 However, none of them support compare arrays with order insensitive, like `[1, 2]` and `[2, 1]` should be equal if we want to compare them with order insensitive.
 
 Also this package support the following features other libraries didn't support like:
@@ -155,7 +151,7 @@ diff({ a: 1, b1: 2, b2: 3 }, { a: 1, b1: 3, b2: 4 }, [
 - 21/11 10m
 - 22/11 20m
 - 23/11 2h
-- 26/11 20h
+- 26/11 2h
 
 ```
 
